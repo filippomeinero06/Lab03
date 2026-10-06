@@ -20,7 +20,7 @@ def main():
 
         if scelta == "1":
             nuovo_responsabile = input("Inserisci il nuovo responsabile: ")
-            # TODO: Aggiorna responsabile nel sistema
+            deposito.responsabile = nuovo_responsabile # con il metodo setter
 
         elif scelta == "2":
             while True:
@@ -41,7 +41,7 @@ def main():
                 print("Errore: inserire valori numerici validi per anno e valore.")
                 continue
             strumento = deposito.aggiungi_strumento(tipo, marca, anno_acquisto, valore)
-            print(f"Strumento aggiunto: {strumento}")
+            print(f"Strumento aggiunto: {strumento.__str__()}")
 
         elif scelta == "4":
             strumenti_ordinati = deposito.strumenti_ordinati_per_marca()
