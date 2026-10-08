@@ -6,12 +6,20 @@ class DepositoStrumenti:
         """Inizializza gli attributi e le strutture dati"""
         self.__nome = nome
         self.__responsabile = responsabile
-        self.elenco_strumenti = [] # lista che conterrà gli oggetti di tipo Strumento
-        self.prestiti = [] # lista dei prestiti [codice_prestito, codice_strumento, cognome_allievo, data_prestito]
+        self.__elenco_strumenti = [] # lista che conterrà gli oggetti di tipo Strumento
+        self.__prestiti = [] # lista dei prestiti [codice_prestito, codice_strumento, cognome_allievo, data_prestito]
 
     @property
     def responsabile(self):
         return self.__responsabile
+
+    @property
+    def elenco_strumenti(self):
+        return self.__elenco_strumenti
+
+    @property
+    def prestiti(self):
+        return self.__prestiti
 
     @responsabile.setter
     def responsabile(self, responsabile):
