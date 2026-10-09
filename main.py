@@ -15,6 +15,7 @@ def menu():
 def main():
     deposito = DepositoStrumenti("Deposito Strumenti Civico", "Alessandro Visconti")
 
+    # TODO sistemare il fatto che se si prova a fare qualcosa prima di caricare i dati dal file deve sollevarsi un eccezione (come nel LAB02 e non bloccare il programma con un errore)
     while True:
         scelta = menu()
 
@@ -30,6 +31,7 @@ def main():
                     break
                 except Exception as e:
                     print(e)
+                    print()
 
         elif scelta == "3":
             tipo = input("Tipo di strumento: ")
@@ -41,7 +43,7 @@ def main():
                 print("Errore: inserire valori numerici validi per anno e valore.")
                 continue
             strumento = deposito.aggiungi_strumento(tipo, marca, anno_acquisto, valore)
-            print(f"Strumento aggiunto: {strumento.__str__()}")
+            print(f"Strumento aggiunto: {strumento}")
 
         elif scelta == "4":
             strumenti_ordinati = deposito.strumenti_ordinati_per_marca()

@@ -1,3 +1,4 @@
+from prestito import Prestito
 from strumento import Strumento
 from operator import attrgetter
 
@@ -7,7 +8,7 @@ class DepositoStrumenti:
         self.__nome = nome
         self.__responsabile = responsabile
         self.__elenco_strumenti = [] # lista che conterrà gli oggetti di tipo Strumento
-        self.__prestiti = [] # lista dei prestiti [codice_prestito, codice_strumento, cognome_allievo, data_prestito]
+        self.__prestiti = [] # lista di oggetti di tipo Prestito
 
     @property
     def responsabile(self):
@@ -27,7 +28,6 @@ class DepositoStrumenti:
 
     def carica_file_strumenti(self, file_path):
         """Carica gli strumenti dal file"""
-        infile = None
         try:
             infile = open(file_path, 'r')
 
@@ -41,11 +41,10 @@ class DepositoStrumenti:
 
                 s = Strumento(codice, tipo, marca, anno, prezzo)
                 self.elenco_strumenti.append(s)
+
+            infile.close()
         except FileNotFoundError:
             raise
-        finally:
-            if infile is not None:
-                infile.close()
 
 
 
@@ -55,15 +54,11 @@ class DepositoStrumenti:
         codici_s = []
 
         for s in self.elenco_strumenti:
-            codici_s.append(s.codice)
+            codici_s.append(int(s.codice[1:]))
 
-        # es. "S8"
-        cod_max = codici_s[-1] # prendo l'ultimo codice della lista (il maggiore)
-
-        cod_max = cod_max[1:] # tolgo da cod_max la S iniziale e tengo solo il numero
-        cod_max = int(cod_max) + 1 # incremento di 1 il codice massimo
-
-        new_codice = "S" + str(cod_max)
+        codici_s.sort()
+        max_cod = codici_s[-1]
+        new_codice = "S" + str(max_cod+1)
 
         new_s = Strumento(new_codice, tipo, marca, anno_acquisto, valore)
 
@@ -84,7 +79,7 @@ class DepositoStrumenti:
 
         if len(self.prestiti) > 0:
             for p in self.prestiti:
-                if id_strumento == p[1]:
+                if id_strumento == p.codice_prestito:
                     gia_prestato = True
 
         for s in self.elenco_strumenti:
@@ -92,25 +87,37 @@ class DepositoStrumenti:
                 strumento_presente = True
 
         if gia_prestato or not strumento_presente:
+            print(f"Errore: strumento {id_strumento} già prestato o non presente")
             raise Exception # TODO sistemare il messaggio di eccezione che riceve il main()
         else:
             cod_prestiti = []
             if len(self.prestiti) > 0:
                 for p in self.prestiti:
-                    cod_prestiti.append(p[0])
+                    cod_prestiti.append(int(p.codice_prestito[1:]))
 
-                cod_max = cod_prestiti[-1]
-                cod_max = cod_max[1:]
-                cod_max = int(cod_max) + 1
-                new_codice = "P" + str(cod_max)
+                cod_prestiti.sort()
+                max_cod = cod_prestiti[-1]
+                new_codice = "P" + str(max_cod+1)
             else:
                 new_codice = "P1"
 
-            prestito = [new_codice, id_strumento, cognome_allievo, data]
+            prestito = Prestito(new_codice, id_strumento, cognome_allievo, data)
             self.prestiti.append(prestito)
 
-            return f"{prestito[0]}, {prestito[1]}, {prestito[2], prestito[3]}"
+            return prestito
 
     def termina_prestito(self, id_prestito):
         """Termina un prestito in atto"""
-        # TODO
+
+        p_trovato = False
+        for p in self.prestiti:
+            if id_prestito == p.codice_prestito:
+                p_da_terminare = p
+                p_trovato = True
+                break
+
+        if p_trovato:
+            self.prestiti.remove(p_da_terminare)
+        else:
+            print(f"Errore: il prestito con codice {id_prestito} non presente")
+            raise Exception

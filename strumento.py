@@ -7,7 +7,7 @@ class Strumento:
         self.__prezzo = prezzo
 
     def __str__(self):
-        return f"{self.__codice}, {self.__tipo}, {self.__marca}, {self.__anno}, {self.__prezzo}"
+        return f"{self.__codice} {self.__tipo} {self.__marca} {self.__anno} {self.__prezzo}"
 
     @property
     def codice(self):
