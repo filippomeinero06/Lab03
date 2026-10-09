@@ -17,3 +17,4 @@ class Strumento:
     def marca(self):
         return self.__marca
 
+

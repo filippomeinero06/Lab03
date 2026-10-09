@@ -121,3 +121,4 @@ class DepositoStrumenti:
         else:
             print(f"Errore: il prestito con codice {id_prestito} non presente")
             raise Exception
+
