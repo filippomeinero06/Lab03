@@ -15,7 +15,8 @@ def menu():
 def main():
     deposito = DepositoStrumenti("Deposito Strumenti Civico", "Alessandro Visconti")
 
-    # TODO sistemare il fatto che se si prova a fare qualcosa prima di caricare i dati dal file deve sollevarsi un eccezione (come nel LAB02 e non bloccare il programma con un errore)
+    deposito_caricato = False # flag per controllare se il deposito di strumenti è già stato caricato o no
+
     while True:
         scelta = menu()
 
@@ -24,16 +25,23 @@ def main():
             deposito.responsabile = nuovo_responsabile # con il metodo setter
 
         elif scelta == "2":
-            while True:
-                try:
-                    file_path = input("Inserisci il path del file da caricare: ").strip()
-                    deposito.carica_file_strumenti(file_path)
-                    break
-                except Exception as e:
-                    print(e)
-                    print()
+            if not deposito_caricato: # prima controllo che il deposito non sia già stato caricato, altrimenti caricherebbe gli strumenti più volte
+                while True:
+                    try:
+                        file_path = input("Inserisci il path del file da caricare: ").strip()
+                        deposito.carica_file_strumenti(file_path)
+                        deposito_caricato = True
+                        break
+                    except Exception as e:
+                        print(e)
+            else:
+                print("Gli strumenti sono già stati caricati")
 
         elif scelta == "3":
+            if not deposito_caricato:
+                print("Prima carica il deposito di strumenti")
+                continue
+
             tipo = input("Tipo di strumento: ")
             marca = input("Marca: ")
             try:
@@ -46,11 +54,19 @@ def main():
             print(f"Strumento aggiunto: {strumento}")
 
         elif scelta == "4":
+            if not deposito_caricato:
+                print("Prima carica il deposito di strumenti")
+                continue
+
             strumenti_ordinati = deposito.strumenti_ordinati_per_marca()
             for s in strumenti_ordinati:
                 print(f'- {s}')
 
         elif scelta == "5":
+            if not deposito_caricato:
+                print("Prima carica il deposito di strumenti")
+                continue
+
             id_strumento = input("ID strumento: ")
             cognome_allievo = input("Cognome allievo: ")
             data = datetime.now().date()
@@ -61,6 +77,10 @@ def main():
                 print(e)
 
         elif scelta == "6":
+            if not deposito_caricato:
+                print("Prima carica il deposito di strumenti")
+                continue
+
             id_prestito = input("ID prestito da terminare: ")
             try:
                 deposito.termina_prestito(id_prestito)

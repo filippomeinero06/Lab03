@@ -6,6 +6,10 @@ class Prestito:
         self.__data = data
 
     @property
+    def codice_strumento(self):
+        return self.__codice_strumento
+
+    @property
     def codice_prestito(self):
         return self.__codice_prestito
 
